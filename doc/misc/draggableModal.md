@@ -1,7 +1,7 @@
 # 项目结构
 
 ```mermaid
-flowchart TB;
+flowchart TB
    subgraph DraggableModal
      subgraph DraggableModalInner
       subgraph Modal
