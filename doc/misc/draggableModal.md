@@ -57,7 +57,19 @@ export interface ModalsState {
 }
 ```
 
-然后就可以定义reducer了，
+然后就可以定义reducer了，可拖动式的Modal会涉及多个行为，针对不同的行为，我们需要设置不同的状态转移，具体如下表：
+|     行为     |     描述     |                      状态转移                      |
+| :----------: | :----------: | :------------------------------------------------: |
+|    resize    |   改变大小   |             zIndex++,设置width,height              |
+|     drag     |     拖动     |                  zIndex++,设置x,y                  |
+|     show     |     显示     | zIndex=maxZIndex+1,visable=true,调整位置至窗口中央 |
+|    focus     |   获得焦点   |                 zIndex=maxZIndex+1                 |
+|     hide     |     隐藏     |                   visable=false                    |
+|    mount     |     挂载     |       zIndex=maxZIndex+1,调整位置至窗口中央        |
+|   unmount    |   解除挂载   |                  删除该Modal状态                   |
+| windowResize | 窗口大小变化 |                调整Modal位置和长宽                 |
+
+
 
 ## 一些小功能
 ### draggableModalReducer
