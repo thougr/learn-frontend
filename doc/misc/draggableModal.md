@@ -25,7 +25,7 @@ flowchart TB
 DraggableModal: 包装DraggableModalInner，将单个Modal的状态传递给DraggableModalInner，避免过多Modal的状态的变化而触发多次渲染。
 
 DraggableModalInner: 包装Modal，将回调（拖动、改变大小等回调）传递给Modal。
-DraggableModalContext: 上下文，存储dispatch和state，state用于保存所有Modal的状态，dispatch用于触发事件（包括挂载、撤销挂载等）从而修改state。
+  DraggableModalContext: 上下文，存储dispatch和state，state用于保存所有Modal的状态，dispatch用于触发事件（包括挂载、撤销挂载等）从而修改state。
 draggableModalReducer: reducer，实现触发dispatch时的回调。
 DraggableModalProvider: 用DraggableModalContext.Provider为下层组件提供上下文，
 
@@ -69,6 +69,32 @@ export interface ModalsState {
 |   unmount    |   解除挂载   |                  删除该Modal状态                   |
 | windowResize | 窗口大小变化 |                调整Modal位置和长宽                 |
 
+## DraggableModalContext
+创建一个上下文，存储state和dispatch，state用于存储所有Modal的状态，dispatch为useReducer生成的dispatch
+
+## DraggableModalProvider
+利用useReducer生成state和dispatch:
+```
+    const [state, dispatch] = useReducer(draggableModalReducer, initialModalsState)
+```
+
+window注册窗口大小变化的监听器，回调为触发windowResize的函数
+```
+    useEffect(() => {
+        if (typeof window !== 'object') {
+            return
+        }
+        const onResize = (): void => dispatch({ type: 'windowResize', size: getWindowSize() })
+        window.addEventListener('resize', onResize)
+        onResize()
+        return () => window.removeEventListener('resize', onResize)
+    }, [dispatch])
+```
+
+最后为子组件提供上下文，即useReducer生成的state和dispatch。
+
+## DraggableModal
+DraggableModal生成Modal的唯一Id，获取DraggableModalContext上下文，从上下文获取单个Modal的状态，最后将id，Modal状态，dispatch等传递给DraggableModalInner
 
 
 ## 一些小功能
@@ -76,4 +102,6 @@ export interface ModalsState {
 #### clampDrag 
 
 #### clampResize
+
+#### getModalState
 
