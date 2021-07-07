@@ -31,7 +31,7 @@ DraggableModalProvider: 用DraggableModalContext.Provider为下层组件提供�
 
 # 代码解析
 ## draggableModalReducer
-首先为一个Modal设置一些状态，包括它的位置、长宽、是否可见、堆叠顺序：
+首先为一个Modal定义一些状态，包括它的位置、长宽、是否可见、堆叠顺序：
 ```
 export interface ModalState {
     x: number
@@ -45,7 +45,8 @@ export interface ModalState {
 
 我们还需找个位置存储所有Modal的状态，定义如下，还额外存储最大的zIndex和窗口大小：
 ```
-export interface ModalsState { maxZIndex: number
+export interface ModalsState {
+    maxZIndex: number
     windowSize: {
         width: number
         height: number
@@ -56,6 +57,11 @@ export interface ModalsState { maxZIndex: number
 }
 ```
 
+然后就可以定义reducer了，
 
+## 一些小功能
+### draggableModalReducer
+#### clampDrag 
 
+#### clampResize
 
