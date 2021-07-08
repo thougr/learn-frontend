@@ -102,7 +102,7 @@ DraggableModal生成Modal的唯一Id，获取DraggableModalContext上下文，�
 ```
 export const DraggableModalInner = memo(DraggableModalInnerNonMemo)
 ```
-传递给DraggableModalInner的属性没有变化时，就不会重新渲染DraggableModalInner。<br>
+传递给DraggableModalInner的属性没有变化时，就不会重新渲染DraggableModalInner。<br><br>
 再进到DraggableModalInnerNonMemo内部看看:<br>
 针对不同的行为和状态的变化，作者利用useEffect和组件回调来触发事件。<br>
 
@@ -136,7 +136,7 @@ export const DraggableModalInner = memo(DraggableModalInnerNonMemo)
     const onFocus = useCallback(() => dispatch({ type: 'focus', id }), [id, dispatch])
 
 ```
-当id和dispatch不变时，就不会重新生成onFocus函数。<br>
+当id和dispatch不变时，就不会重新生成onFocus函数。<br><br>
 Modal的title也可以用useMemo进行优化： 
 ```
     const titleElement = useMemo(
@@ -152,7 +152,7 @@ Modal的title也可以用useMemo进行优化：
         [onMouseDrag, onFocus, title],
     )
 ```
-当onMouseDrag, onFocus, title不变时，titleElement就不会重新计算。<br>
+当onMouseDrag, onFocus, title不变时，titleElement就不会重新计算。<br><br>
 其他回调类似，也用useCallback减少生成次数。最后将回调和属性传递给ant-design的Modal就好。
 
 ## 一些小功能
