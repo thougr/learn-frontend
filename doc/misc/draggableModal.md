@@ -92,7 +92,7 @@ window注册窗口大小变化的监听器，回调为触发windowResize的函�
     }, [dispatch])
 ```
 
-最后为子组件提供上下文，即useReducer生成的state和dispatch。
+最后为子组件提供上下文，包括useReducer生成的state和dispatch。
 
 ## DraggableModal
 DraggableModal生成Modal的唯一Id，获取DraggableModalContext上下文，从上下文获取单个Modal的状态，最后将id，Modal状态，dispatch等传递给DraggableModalInner
@@ -153,16 +153,20 @@ Modal的title也可以用useMemo进行优化：
     )
 ```
 当onMouseDrag, onFocus, title不变时，titleElement就不会重新计算。<br><br>
-其他回调类似，也用useCallback减少生成次数。最后将回调和属性传递给ant-design的Modal就好。
+其他回调类似，用useCallback减少生成次数。最后将回调和属性传递给ant-design的Modal。
 
 ## 一些小功能
 ### clampDrag 
+根据窗口大小和Modal的大小来计算出最大的X,Y，以确保拖动时Modal在窗口内部。
 
 ### clampResize
+同clampDrag，确保拉伸时不会拉出到窗口外。
 
 ### getModalState
+该函数需要传递一个id值，如果该id对应的Modal的状态不存在，则返回初始的状态。
 
-### usePrevious
+### [usePrevious](https://blog.logrocket.com/how-to-get-previous-props-state-with-react-hooks/)
+该自定义Hook利用了useEffect和useRef的特性，useRef能确保返回值不会变化（无论渲染多少次），除非显式地通过ref.current进行赋值；useEffect的回调在组件渲染完成的时候才会触发，所以能够让usePrevious返回渲染完成前的值，即旧值。
 
 ### useDrag
 
