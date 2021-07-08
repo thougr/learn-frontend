@@ -21,9 +21,11 @@ flowchart TB
 
 ```
 
+# 功能描述
+提供一个拖动式的Modal组件
+
 # 文件描述
 DraggableModal: 包装DraggableModalInner，将单个Modal的状态传递给DraggableModalInner，避免过多Modal的状态的变化而触发多次渲染。 <br>
-
 DraggableModalInner: 包装Modal，将回调（拖动、改变大小等回调）传递给Modal。<br>
 DraggableModalContext: 上下文，存储dispatch和state，state用于保存所有Modal的状态，dispatch用于触发事件（包括挂载、撤销挂载等）从而修改state。<br>
 draggableModalReducer: reducer，实现触发dispatch时的回调。<br>
@@ -96,12 +98,78 @@ window注册窗口大小变化的监听器，回调为触发windowResize的函�
 ## DraggableModal
 DraggableModal生成Modal的唯一Id，获取DraggableModalContext上下文，从上下文获取单个Modal的状态，最后将id，Modal状态，dispatch等传递给DraggableModalInner
 
+### DraggableModalInner
+为了尽可能减少渲染的次数，作者使用memo来进行优化：
+```
+export const DraggableModalInner = memo(DraggableModalInnerNonMemo)
+```
+传递给DraggableModalInner的属性没有变化时，就不会重新渲染DraggableModalInner。<br>
+再进到DraggableModalInnerNonMemo内部看看:
+针对不同的行为和状态的变化，作者利用useEffect和组件回调来触发事件。
+
+挂载完组件后触发事件mount:
+```
+    useEffect(() => {
+        dispatch({ type: 'mount', id, intialState: { initialWidth, initialHeight } })
+        return () => dispatch({ type: 'unmount', id })
+    }, [dispatch, id, initialWidth, initialHeight])
+
+```
+
+可见属性变化后触发事件show或hide:
+```
+    useEffect(() => {
+        if (visible !== visiblePrevious) {
+            if (visible) {
+                dispatch({ type: 'show', id })
+            } else {
+                dispatch({ type: 'hide', id })
+            }
+        }
+    }, [visible, visiblePrevious, id, dispatch])
+```
+
+此外还需要设置获得焦点、拖动、改变大小等回调。
+回调函数一般来说在每次渲染的时候都会重新生成一遍，如果回调函数和渲染前的一样，其实就没有必要重新生成。所以，这种情况下，我们可以进一步优化，就是利用React Hook提供的useMemo和useCallback。
+
+以获取焦点的回调为例：
+```
+    const onFocus = useCallback(() => dispatch({ type: 'focus', id }), [id, dispatch])
+
+```
+当id和dispatch不变时，就不会重新生成onFocus函数。
+
+Modal的title也可以用useMemo进行优化：
+```
+    const titleElement = useMemo(
+        () => (
+            <div
+                className="ant-design-draggable-modal-title"
+                onMouseDown={onMouseDrag}
+                onClick={onFocus}
+            >
+                {title}
+            </div>
+        ),
+        [onMouseDrag, onFocus, title],
+    )
+```
+当onMouseDrag, onFocus, title不变时，titleElement就不会重新计算。
+
+其他回调类似，也用useCallback减少生成次数。
+
+最后将回调和属性传递给ant-design的Modal就好。
+
 
 ## 一些小功能
-### draggableModalReducer
-#### clampDrag 
+### clampDrag 
 
-#### clampResize
+### clampResize
 
-#### getModalState
+### getModalState
 
+### usePrevious
+
+### useDrag
+
+### useResize
