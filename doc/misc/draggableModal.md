@@ -129,17 +129,16 @@ export const DraggableModalInner = memo(DraggableModalInnerNonMemo)
     }, [visible, visiblePrevious, id, dispatch])
 ```
 
-此外还需要设置获得焦点、拖动、改变大小等回调。
-回调函数一般来说在每次渲染的时候都会重新生成一遍，如果回调函数和渲染前的一样，其实就没有必要重新生成。所以，这种情况下，我们可以进一步优化，就是利用React Hook提供的useMemo和useCallback。
+此外还需要设置获得焦点、拖动、改变大小等回调。<br>
+回调函数一般来说在每次渲染的时候都会重新生成一遍，如果回调函数和渲染前的一样，其实就没有必要重新生成。所以，这种情况下，我们可以进一步优化，就是利用React Hook提供的useMemo和useCallback。<br>
 
 以获取焦点的回调为例：
 ```
     const onFocus = useCallback(() => dispatch({ type: 'focus', id }), [id, dispatch])
 
 ```
-当id和dispatch不变时，就不会重新生成onFocus函数。
-
-Modal的title也可以用useMemo进行优化：
+当id和dispatch不变时，就不会重新生成onFocus函数。<br>
+Modal的title也可以用useMemo进行优化： 
 ```
     const titleElement = useMemo(
         () => (
@@ -154,12 +153,9 @@ Modal的title也可以用useMemo进行优化：
         [onMouseDrag, onFocus, title],
     )
 ```
-当onMouseDrag, onFocus, title不变时，titleElement就不会重新计算。
+当onMouseDrag, onFocus, title不变时，titleElement就不会重新计算。<br>
 
-其他回调类似，也用useCallback减少生成次数。
-
-最后将回调和属性传递给ant-design的Modal就好。
-
+其他回调类似，也用useCallback减少生成次数。最后将回调和属性传递给ant-design的Modal就好。
 
 ## 一些小功能
 ### clampDrag 
