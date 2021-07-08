@@ -98,7 +98,7 @@ window注册窗口大小变化的监听器，回调为触发windowResize的函�
 ## DraggableModal
 DraggableModal生成Modal的唯一Id，获取DraggableModalContext上下文，从上下文获取单个Modal的状态，最后将id，Modal状态，dispatch等传递给DraggableModalInner
 
-### DraggableModalInner
+## DraggableModalInner
 为了尽可能减少渲染的次数，作者使用memo来进行优化：
 ```
 export const DraggableModalInner = memo(DraggableModalInnerNonMemo)
