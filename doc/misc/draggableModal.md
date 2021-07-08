@@ -102,9 +102,9 @@ DraggableModal生成Modal的唯一Id，获取DraggableModalContext上下文，�
 ```
 export const DraggableModalInner = memo(DraggableModalInnerNonMemo)
 ```
-传递给DraggableModalInner的属性没有变化时，就不会重新渲染DraggableModalInner。
-再进到DraggableModalInnerNonMemo内部看看:
-针对不同的行为和状态的变化，作者利用useEffect和组件回调来触发事件。
+传递给DraggableModalInner的属性没有变化时，就不会重新渲染DraggableModalInner。<br>
+再进到DraggableModalInnerNonMemo内部看看:<br>
+针对不同的行为和状态的变化，作者利用useEffect和组件回调来触发事件。<br>
 
 挂载完组件后触发事件mount:
 ```
@@ -128,7 +128,7 @@ export const DraggableModalInner = memo(DraggableModalInnerNonMemo)
     }, [visible, visiblePrevious, id, dispatch])
 ```
 
-此外还需要设置获得焦点、拖动、改变大小等回调。
+此外还需要设置获得焦点、拖动、改变大小等回调。<br>
 回调函数一般来说在每次渲染的时候都会重新生成一遍，如果回调函数和渲染前的一样，其实就没有必要重新生成。所以，这种情况下，我们可以进一步优化，可以利用好React Hook提供的useMemo和useCallback。
 
 以获取焦点的回调为例：
@@ -153,7 +153,6 @@ Modal的title也可以用useMemo进行优化：
     )
 ```
 当onMouseDrag, onFocus, title不变时，titleElement就不会重新计算。<br>
-
 其他回调类似，也用useCallback减少生成次数。最后将回调和属性传递给ant-design的Modal就好。
 
 ## 一些小功能
