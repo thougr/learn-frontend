@@ -169,5 +169,8 @@ Modal的title也可以用useMemo进行优化：
 该自定义Hook利用了useEffect和useRef的特性，useRef能确保返回值不会变化（无论渲染多少次），除非显式地通过ref.current进行赋值；useEffect的回调在组件渲染完成的时候才会触发，所以能够让usePrevious返回渲染完成前的值，即旧值。
 
 ### useDrag
+返回拖动Modal的回调。<br>
+根据Modal的x,y值，鼠标刚按下的x,y值，以及拖动后的x,y值，来计算出Modal新的x,y值。注册鼠标按下和松开的回调。
 
 ### useResize
+与useDrag类似，根据鼠标刚按下的位置、拖动后的位置，来计算出Modal新的长宽。注册鼠标按下和松开的回调
